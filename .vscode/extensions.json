@@ -1,0 +1,30 @@
+{
+    // Navigate to "Extensions", filter extensions using "@recommended" filter
+    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+  
+    // List of extensions which should be recommended for users of this workspace.
+    "recommendations": [
+      // Live Share
+      "ms-vsliveshare.vsliveshare",
+      // Auto Rename Tag
+      "formulahendry.auto-rename-tag",
+      // Console Ninja
+      "WallabyJs.console-ninja",
+      // Conventional Commits
+      "vivaxy.vscode-conventional-commits",
+      // DotENV
+      "mikestead.dotenv",
+      // Error Lens
+      "usernamehw.errorlens",
+      // ES7 Snippets
+      "dsznajder.es7-react-js-snippets",
+      // ESLint
+      "dbaeumer.vscode-eslint",
+      // Prettier
+      "esbenp.prettier-vscode",
+      // Pretty Typescript Errors
+      "YoavBls.pretty-ts-errors",
+      // Tailwind IntelliSense
+      "bradlc.vscode-tailwindcss"
+    ]
+  }
