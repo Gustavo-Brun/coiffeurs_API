@@ -14,12 +14,12 @@ datasource db {
   // directUrl = env("DIRECT_URL") // # SUPABASE > Direct connection to the database. Used for migrations
 }
 
-model Users {
+model Providers {
   id             Int       @id @default(autoincrement())
   name           String
   email          String    @unique
   password       String
-  whatsappNumber String?   @unique
+  whatsappNumber String    @unique
   createdAt      DateTime  @default(now())
   updatedAt      DateTime?
 }

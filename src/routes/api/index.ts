@@ -6,10 +6,10 @@ import jwtAuth from '@/hooks/jwtAuth';
 // import management from './management';
 // import animals from './animals';
 
-import UsersController from '@/controllers/usersController';
+import ProviderController from '@/controllers/providersController';
 import AuthController from '@/controllers/authController';
 
-const usersController = new UsersController();
+const providerController = new ProviderController();
 const authController = new AuthController();
 
 const authenticated = async (app: FastifyInstance) => {
@@ -30,8 +30,8 @@ export default async function Routes(app: FastifyInstance) {
 
   app.register(authenticated);
 
-  app.post('/users/signup', usersController.create);
-  app.post('/users/login', authController.login);
+  app.post('/provider/signup', providerController.create);
+  app.post('/provider/login', authController.login);
 
   app.get('/', async () => {
     return { status: 'ok' };

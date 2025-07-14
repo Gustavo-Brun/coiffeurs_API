@@ -6,9 +6,9 @@ import Types from '@/@types/default/auth';
 import { AuthRequest } from '@/@types/hooks/auth';
 import { decrypt } from '@/utils/security';
 
-import UsersModel from '@/database/users';
+import ProvidersModel from '@/database/providers';
 
-const usersModel = new UsersModel();
+const providersModel = new ProvidersModel();
 
 export default class AuthController {
   gerenateToken = async (payload: any): Promise<string> => {
@@ -24,19 +24,19 @@ export default class AuthController {
     const body = req.body as Types.LoginBody;
 
     try {
-      const user = await usersModel.getOne(body.email);
+      const provider = await providersModel.getOne(body.email);
 
-      if (user) {
-        const validPassword = decrypt(body.password, user.password);
+      if (provider) {
+        const validPassword = decrypt(body.password, provider.password);
         if (validPassword) {
           const payload = {
             email: body.email,
             createdAt: new Date()
           };
 
-          const userToken = await this.gerenateToken(payload);
+          const providerToken = await this.gerenateToken(payload);
 
-          return reply.code(200).send({ data: userToken });
+          return reply.code(200).send({ data: providerToken });
         }
       }
 

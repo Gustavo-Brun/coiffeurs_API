@@ -3,10 +3,10 @@ import { jwtDecrypt } from 'jose';
 
 import * as Types from '@/@types/hooks/auth';
 import whitelist from '@/routes/whitelist';
-import UsersModel from '@/database/users';
+import ProvidersModel from '@/database/providers';
 
 const auth = async (request: Types.AuthRequest, reply: FastifyReply) => {
-  const usersModel = new UsersModel();
+  const providersModel = new ProvidersModel();
 
   const { authorization } = request.headers as Types.ReqHeaders;
 
@@ -28,9 +28,9 @@ const auth = async (request: Types.AuthRequest, reply: FastifyReply) => {
 
     const authData = payload as unknown as Types.AuthorizationData;
 
-    const user = await usersModel.getOne(authData.email);
+    const provider = await providersModel.getOne(authData.email);
 
-    if (!user) {
+    if (!provider) {
       return reply.code(401).send({
         status: 401,
         errorCode: 'AUT-402',
