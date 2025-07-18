@@ -2,12 +2,16 @@ import { FastifyReply } from 'fastify';
 
 import Types from '@/@types/default/providers';
 import { AuthRequest } from '@/@types/hooks/auth';
+
 import { encrypt } from '@/utils/security';
 
-import AuthController from './authController';
+import AuthController from '@/controllers/authController';
+
 import ProvidersModel from '@/database/providers';
+import QueuesModel from '@/database/queues';
 
 const providersModel = new ProvidersModel();
+const queuesModel = new QueuesModel();
 
 export default class ProvidersController extends AuthController {
   create = async (req: AuthRequest, reply: FastifyReply) => {
@@ -40,14 +44,17 @@ export default class ProvidersController extends AuthController {
         });
       }
 
+      const queue = await queuesModel.create(providerDb.id);
+
       const payloadToken = {
+        providerId: providerDb.id,
         email: providerDb.email,
         createdAt: new Date()
       };
 
       const providerToken = await this.gerenateToken(payloadToken);
 
-      return reply.code(201).send({ data: providerToken });
+      return reply.code(201).send({ data: { providerToken: providerToken, queueAlive: !!queue } });
     } catch (error) {
       console.log('CREATE_PROVIDER ', error);
 

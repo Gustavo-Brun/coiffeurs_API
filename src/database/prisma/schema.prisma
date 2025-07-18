@@ -22,4 +22,56 @@ model Providers {
   whatsappNumber String    @unique
   createdAt      DateTime  @default(now())
   updatedAt      DateTime?
+
+  clients Clients[]
+  queue   Queues?
+}
+
+model Clients {
+  id             Int       @id @default(autoincrement())
+  name           String    @unique
+  whatsappNumber String?   @unique
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime?
+
+  provider   Providers @relation(fields: [providerId], references: [id])
+  providerId Int
+
+  queueEntries QueueEntry[]
+}
+
+model Queues {
+  id         String    @id @default(cuid())
+  provider   Providers @relation(fields: [providerId], references: [id])
+  providerId Int       @unique
+
+  entries QueueEntry[]
+}
+
+enum QueueEntryStatus {
+  WAITING
+  COMPLETED
+  REMOVED
+}
+
+model QueueEntry {
+  id       Int              @id @default(autoincrement())
+  order    Int
+  joinedAt DateTime         @default(now())
+  status   QueueEntryStatus @default(WAITING)
+
+  client   Clients @relation(fields: [clientId], references: [id])
+  clientId Int
+  note     String?
+
+  queue   Queues @relation(fields: [queueId], references: [id])
+  queueId String
+
+  // RAW SQL MIGRATION - queue_entry_add_partial_unique_indexes //
+
+  //  -- Add a unique index combination queueId and order, ONLY where the status is 'WAITING'
+  // CREATE UNIQUE INDEX "QueueEntry_queueId_order_waiting_unique" ON "QueueEntry"("queueId", "order") WHERE status = 'WAITING';
+
+  // -- Add a unique index combination queueId and clientId, ONLY where the status is 'WAITING'
+  // CREATE UNIQUE INDEX "QueueEntry_queueId_clientId_waiting_unique" ON "QueueEntry"("queueId", "clientId") WHERE status = 'WAITING';
 }

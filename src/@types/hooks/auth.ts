@@ -5,6 +5,7 @@ export interface ReqHeaders {
 }
 
 export interface AuthorizationData {
+  providerId: number;
   email: string;
   createdAt?: string;
 }

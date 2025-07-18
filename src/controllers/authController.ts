@@ -1,9 +1,9 @@
 import { FastifyReply } from 'fastify';
-
 import { EncryptJWT } from 'jose';
 
 import Types from '@/@types/default/auth';
 import { AuthRequest } from '@/@types/hooks/auth';
+
 import { decrypt } from '@/utils/security';
 
 import ProvidersModel from '@/database/providers';
@@ -30,6 +30,7 @@ export default class AuthController {
         const validPassword = decrypt(body.password, provider.password);
         if (validPassword) {
           const payload = {
+            providerId: provider.id,
             email: body.email,
             createdAt: new Date()
           };
