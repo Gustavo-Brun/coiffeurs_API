@@ -29,8 +29,8 @@ model Providers {
 
 model Clients {
   id             Int       @id @default(autoincrement())
-  name           String    @unique
-  whatsappNumber String?   @unique
+  name           String
+  whatsappNumber String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime?
 
@@ -38,6 +38,9 @@ model Clients {
   providerId Int
 
   queueEntries QueueEntry[]
+
+  @@unique([providerId, name])
+  @@unique([providerId, whatsappNumber])
 }
 
 model Queues {
