@@ -16,6 +16,11 @@ namespace typesQueues {
     clientId: number;
     direction: 'UP' | 'DOWN';
   }
+
+  export interface FinishQueueEntryCycleBody {
+    entryId: number;
+    entryPrice: number;
+  }
 }
 
 export = typesQueues;

@@ -184,7 +184,7 @@ class QueuesModel {
     return lastClientEntry;
   };
 
-  finishCycle = async (entryId: number) => {
+  finishCycle = async (entryId: number, entryPrice: number) => {
     return prisma
       .$transaction(async (tx) => {
         const entryToComplete = await tx.queueEntry.findUnique({
@@ -207,8 +207,9 @@ class QueuesModel {
             id: entryToComplete.id
           },
           data: {
+            order: -1,
             status: 'COMPLETED',
-            order: -1
+            price: entryPrice
           }
         });
 
@@ -235,8 +236,9 @@ class QueuesModel {
         return {
           entry: {
             id: updatedCompletedEntry.id,
+            order: updatedCompletedEntry.order,
             status: updatedCompletedEntry.status,
-            order: updatedCompletedEntry.order
+            price: updatedCompletedEntry.price
           }
         };
       })

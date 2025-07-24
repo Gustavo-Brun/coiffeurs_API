@@ -62,10 +62,11 @@ model QueueEntry {
   order    Int
   joinedAt DateTime         @default(now())
   status   QueueEntryStatus @default(WAITING)
+  note     String?
+  price    Int?
 
   client   Clients @relation(fields: [clientId], references: [id])
   clientId Int
-  note     String?
 
   queue   Queues @relation(fields: [queueId], references: [id])
   queueId String
