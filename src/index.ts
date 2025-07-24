@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 
 import routes from './routes/api';
+import pingRoot from './utils/ping';
 
 const app = fastify();
 
@@ -21,3 +22,5 @@ app.listen({ host: '0.0.0.0', port: 4433 }, (err, address) => {
   }
   console.log(`Server listening at ${address}`);
 });
+
+pingRoot();
