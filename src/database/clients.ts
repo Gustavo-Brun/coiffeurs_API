@@ -12,8 +12,10 @@ class ClientsModel {
   getOne = async (providerId: number, clientName: string) => {
     return await prisma.clients.findUnique({
       where: {
-        providerId,
-        name: clientName
+        providerId_name: {
+          providerId,
+          name: clientName
+        }
       }
     });
   };
