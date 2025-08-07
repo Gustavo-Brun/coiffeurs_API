@@ -311,6 +311,36 @@ class QueuesModel {
         return { errorMessage: error.message };
       });
   };
+
+  getByWpp = async (wpp: string) => {
+    const provider = await prisma.providers.findUnique({
+      where: {
+        whatsappNumber: wpp
+      }
+    });
+
+    if (provider) {
+      const queue = await prisma.queues.findUnique({
+        where: {
+          providerId: provider.id
+        },
+        include: {
+          entries: {
+            include: {
+              client: true
+            }
+          }
+        }
+      });
+
+      return {
+        providerName: provider.name,
+        queue
+      };
+    }
+
+    return null;
+  };
 }
 
 export default QueuesModel;

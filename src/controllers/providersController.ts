@@ -65,4 +65,44 @@ export default class ProvidersController extends AuthController {
       });
     }
   };
+
+  getPublicQueue = async (req: AuthRequest, reply: FastifyReply) => {
+    try {
+      const { wpp } = req.params as { wpp: string };
+
+      const data = await queuesModel.getByWpp(wpp);
+
+      if (!data || !data.queue) {
+        return reply.code(500).send({
+          status: 500,
+          errorCode: 'QUE-PQ02',
+          errorMessage: 'Erro inesperado ao listar a fila do provedor.'
+        });
+      }
+
+      const orderedEntries = data.queue.entries.sort((a, b) => a.order - b.order);
+
+      const waitingEntries = orderedEntries.filter((entry) => entry.status === 'WAITING');
+
+      const serializedEntries = waitingEntries.map((entry) => {
+        return {
+          id: entry.id,
+          order: entry.order,
+          clientId: entry.clientId,
+          name: entry.client.name,
+          whatsappNumber: entry.client.whatsappNumber
+        };
+      });
+
+      return reply.code(200).send({ data: { providerName: data.providerName, serializedEntries } });
+    } catch (error) {
+      console.log(error);
+
+      return reply.code(500).send({
+        status: 500,
+        errorCode: 'QUE-PQ01',
+        errorMessage: 'Erro inesperado ao listar a fila do provedor.'
+      });
+    }
+  };
 }

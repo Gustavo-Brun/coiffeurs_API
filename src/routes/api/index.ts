@@ -32,6 +32,7 @@ export default async function Routes(app: FastifyInstance) {
 
   app.post('/provider/signup', providerController.create);
   app.post('/provider/login', authController.login);
+  app.get('/provider/queue/:wpp', providerController.getPublicQueue);
 
   app.get('/', async () => {
     return { status: 'ok' };
