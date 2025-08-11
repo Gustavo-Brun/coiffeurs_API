@@ -3,6 +3,7 @@ import frb from 'fastify-raw-body';
 
 import jwtAuth from '@/hooks/jwtAuth';
 
+import provider from './providers';
 import clients from './clients';
 import queues from './queues';
 
@@ -15,6 +16,7 @@ const authController = new AuthController();
 const authenticated = async (app: FastifyInstance) => {
   app.addHook('preHandler', jwtAuth);
 
+  app.register(provider, { prefix: 'providers' });
   app.register(clients, { prefix: 'clients' });
   app.register(queues, { prefix: 'queues' });
 };

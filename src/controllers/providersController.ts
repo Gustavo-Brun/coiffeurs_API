@@ -1,7 +1,7 @@
 import { FastifyReply } from 'fastify';
 
 import Types from '@/@types/default/providers';
-import { AuthRequest } from '@/@types/hooks/auth';
+import { AuthRequest, AuthorizationData } from '@/@types/hooks/auth';
 
 import { encrypt } from '@/utils/security';
 
@@ -62,6 +62,32 @@ export default class ProvidersController extends AuthController {
         status: 500,
         errorCode: 'PRV-CR01',
         errorMessage: 'Erro inesperado ao registrar o provedor.'
+      });
+    }
+  };
+
+  getById = async (req: AuthRequest, reply: FastifyReply) => {
+    const { providerId } = req.auth as AuthorizationData;
+
+    try {
+      const provider = await providersModel.getById(providerId);
+
+      if (!provider) {
+        return reply.code(500).send({
+          status: 500,
+          errorCode: 'PRV-GE01',
+          errorMessage: 'Erro inesperado ao buscar o provedor.'
+        });
+      }
+
+      return reply.code(200).send({ data: provider });
+    } catch (error) {
+      console.log(error);
+
+      return reply.code(500).send({
+        status: 500,
+        errorCode: 'PRV-GE02',
+        errorMessage: 'Erro inesperado ao buscar o provedor.'
       });
     }
   };

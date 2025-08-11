@@ -16,6 +16,14 @@ class ProvidersModel {
       }
     });
   };
+
+  getById = async (providerId: number) => {
+    return await prisma.providers.findUnique({
+      where: {
+        id: providerId
+      }
+    });
+  };
 }
 
 export default ProvidersModel;
