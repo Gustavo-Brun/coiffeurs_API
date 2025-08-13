@@ -28,6 +28,15 @@ class ClientsModel {
     });
   };
 
+  edit = async (clientId: number, obj: Partial<Types.CreateClientBody>) => {
+    return await prisma.clients.update({
+      where: {
+        id: clientId
+      },
+      data: obj
+    });
+  };
+
   getAll = async (providerId: number) => {
     return await prisma.clients.findMany({
       where: {

@@ -65,6 +65,48 @@ export default class ClientsController extends QueuesController {
     }
   };
 
+  edit = async (req: AuthRequest, reply: FastifyReply) => {
+    const { clientId } = req.params as { clientId: string };
+    const { name, whatsappNumber } = req.body as Partial<Types.CreateClientBody>;
+
+    try {
+      const client = await clientsModel.getById(Number(clientId));
+
+      if (!client) {
+        return reply.code(404).send({
+          status: 404,
+          errorCode: 'CLI-ED03',
+          errorMessage: 'Cliente nao encontrado.'
+        });
+      }
+
+      const serializedClient = {
+        name,
+        whatsappNumber
+      };
+
+      const clientDb = await clientsModel.edit(client.id, serializedClient);
+
+      if (!clientDb) {
+        return reply.code(500).send({
+          status: 500,
+          errorCode: 'CLI-ED02',
+          errorMessage: 'Erro inesperado ao editar o cliente.'
+        });
+      }
+
+      return reply.code(200).send({ data: clientDb });
+    } catch (error) {
+      console.log('EDIT_CLIENT ', error);
+
+      return reply.code(500).send({
+        status: 500,
+        errorCode: 'CLI-ED01',
+        errorMessage: 'Erro inesperado ao editar o cliente.'
+      });
+    }
+  };
+
   getAll = async (req: AuthRequest, reply: FastifyReply) => {
     const { providerId } = req.auth as AuthorizationData;
 
