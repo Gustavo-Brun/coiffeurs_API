@@ -84,7 +84,11 @@ export default class QueuesController {
   listQueue = async (req: AuthRequest, reply: FastifyReply) => {
     try {
       const { providerId } = req.auth as AuthorizationData;
-      const { date } = req.query as { date?: string };
+      const { date, startDate, endDate } = req.query as {
+        date?: string;
+        startDate?: string;
+        endDate?: string;
+      };
 
       const queue = await queuesModel.getOne(providerId);
 
@@ -101,6 +105,18 @@ export default class QueuesController {
       if (date) {
         const entriesByDate = orderedEntries.filter(
           (i) => i.joinedAt.toISOString().split('T')[0] === date
+        );
+
+        const payload = { ...queue, entries: entriesByDate };
+
+        return reply.code(200).send({ data: payload });
+      }
+
+      if (startDate && endDate) {
+        const entriesByDate = orderedEntries.filter(
+          (i) =>
+            i.joinedAt.toISOString().split('T')[0] >= startDate &&
+            i.joinedAt.toISOString().split('T')[0] <= endDate
         );
 
         const payload = { ...queue, entries: entriesByDate };
